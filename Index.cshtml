@@ -1,0 +1,58 @@
+﻿@model IEnumerable<BadmintonCourtBookingSystem.Models.TimeSlot>
+
+@{
+    ViewData["Title"] = "Time Slots";
+}
+
+<h1>Time Slots</h1>
+
+<p>
+    <a asp-action="Create"
+       class="btn btn-primary">
+        Add Time Slot
+    </a>
+</p>
+
+<table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+
+            <td>@item.StartTime</td>
+
+            <td>@item.EndTime</td>
+
+            <td>
+                @(item.IsActive ? "Active" : "Inactive")
+            </td>
+
+            <td>
+                    <a asp-action="Edit"
+                       asp-route-id="@item.TimeSlotId">
+                        Edit
+                    </a>
+                    |
+                    <a asp-action="Delete"
+                       asp-route-id="@item.TimeSlotId">
+                        Delete
+                    </a>
+            </td>
+
+        </tr>
+    }
+
+    </tbody>
+
+</table>

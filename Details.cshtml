@@ -1,0 +1,220 @@
+﻿@model BadmintonCourtBookingSystem.ViewModels.CourtDetailsViewModel
+
+@{
+    ViewData["Title"] = "Court Details";
+
+    var mainImage = Model.Court.CourtImages
+        .FirstOrDefault()?.ImagePath;
+}
+
+<div class="container py-5">
+
+    <!-- Court Profile Card -->
+
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+        <div class="row g-0">
+
+            <!-- Left Image -->
+
+            <div class="col-lg-5">
+
+                @if (!string.IsNullOrEmpty(mainImage))
+                {
+                    <img src="@mainImage"
+                         class="img-fluid w-100 h-100"
+                         style="object-fit:cover; min-height:450px;" />
+                }
+                else
+                {
+                    <img src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea"
+                         class="img-fluid w-100 h-100"
+                         style="object-fit:cover; min-height:450px;" />
+                }
+
+            </div>
+
+            <!-- Right Content -->
+
+            <div class="col-lg-7">
+
+                <div class="p-5">
+
+                    <h1 class="fw-bold mb-3">
+                        @Model.Court.CourtName
+                    </h1>
+
+                    <div class="mb-4">
+
+                        <span class="badge bg-success px-3 py-2">
+                            @Model.Court.CourtStatus
+                        </span>
+
+                    </div>
+
+                    <h3 class="text-primary fw-bold mb-4">
+                        ₹@Model.Court.HourlyRate / Hour
+                    </h3>
+
+                    <div class="mb-4">
+
+                        <h5 class="fw-bold">
+
+                            ⭐ @Model.AverageRating.ToString("0.0")
+
+                            <span class="text-muted">
+                                (@Model.TotalReviews Reviews)
+                            </span>
+
+                        </h5>
+
+                    </div>
+
+                    <p class="text-muted fs-5">
+
+                        Premium indoor badminton court with
+                        professional flooring, lighting,
+                        seating area and excellent facilities.
+
+                    </p>
+
+                    <div class="mt-4">
+
+                        @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                        {
+                            <a asp-action="Index"
+                               class="btn btn-outline-secondary rounded-pill px-4">
+                                Back to Courts
+                            </a>
+
+                            <a asp-action="UploadImage"
+                               asp-route-courtId="@Model.Court.CourtId"
+                               class="btn btn-success rounded-pill px-4 ms-2">
+                                Upload Images
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Home"
+                               asp-action="Index"
+                               class="btn btn-outline-secondary rounded-pill px-4">
+                                Back to Home
+                            </a>
+
+                            <a asp-controller="Booking"
+                               asp-action="Create"
+                               asp-route-courtId="@Model.Court.CourtId"
+                               class="btn btn-primary rounded-pill px-4 ms-2">
+                                Book This Court
+                            </a>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Court Gallery -->
+
+    <div class="mt-5">
+
+        <h2 class="fw-bold text-center mb-4">
+            Court Gallery
+        </h2>
+
+        @if (Model.Court.CourtImages.Any())
+        {
+            <div class="row">
+
+                @foreach (var image in Model.Court.CourtImages)
+                {
+                    <div class="col-md-4 mb-4">
+
+                        <img src="@image.ImagePath"
+                             class="img-fluid rounded-4 shadow-sm"
+                             style="height:250px;width:100%;object-fit:cover;" />
+
+                    </div>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info text-center">
+                No court images available.
+            </div>
+        }
+
+    </div>
+
+    <!-- Reviews -->
+
+    <div class="mt-5">
+
+        <h2 class="fw-bold text-center mb-5">
+            Customer Reviews
+        </h2>
+
+        @if (Model.Reviews.Any())
+        {
+            <div class="row">
+
+                @foreach (var review in Model.Reviews)
+                {
+                    <div class="col-md-6 mb-4">
+
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                            <div class="card-body p-4">
+
+                                <h5>
+
+                                    @for (int i = 0; i < review.Rating; i++)
+                                    {
+                                        <span>⭐</span>
+                                    }
+
+                                </h5>
+
+                                <p class="text-muted mt-3">
+                                    @review.Comment
+                                </p>
+
+                                <hr />
+
+                                <strong>
+                                    @review.User?.FirstName
+                                    @review.User?.LastName
+                                </strong>
+
+                                <br />
+
+                                <small class="text-muted">
+                                    @review.CreatedAt.ToString("dd MMM yyyy")
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info text-center">
+                No reviews available yet.
+            </div>
+        }
+
+    </div>
+
+</div>

@@ -1,0 +1,101 @@
+﻿@model BadmintonCourtBookingSystem.ViewModels.DashboardChartViewModel
+
+@{
+    ViewData["Title"] = "Dashboard Charts";
+}
+<div class="container mt-4">
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <div class="card shadow">
+                <div class="card-header">
+                    Booking Status
+                </div>
+
+                <div class="card-body">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="card shadow">
+                <div class="card-header">
+                    Monthly Bookings
+                </div>
+
+                <div class="card-body">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+@section Scripts
+{
+    <script>
+
+        const statusChart = new Chart(
+        document.getElementById('statusChart'),
+        {
+            type: 'pie',
+
+            data:
+            {
+                labels:
+                [
+                    'Pending',
+                    'Confirmed',
+                    'Checked In',
+                    'Completed',
+                    'Cancelled'
+                ],
+
+                datasets:
+                [{
+                    data:
+                    [
+                        @Model.PendingBookings,
+                        @Model.ConfirmedBookings,
+                        @Model.CheckedInBookings,
+                        @Model.CompletedBookings,
+                        @Model.CancelledBookings
+                    ]
+                }]
+            }
+        });
+
+        const monthlyChart = new Chart(
+        document.getElementById('monthlyChart'),
+        {
+            type: 'bar',
+
+            data:
+            {
+                labels:
+                [
+                    'Jan','Feb','Mar','Apr',
+                    'May','Jun','Jul','Aug',
+                    'Sep','Oct','Nov','Dec'
+                ],
+
+                datasets:
+                [{
+                    label: 'Bookings',
+                    data:
+                    [
+                        @string.Join(",", Model.MonthlyBookings)
+                    ]
+                }]
+            }
+        });
+
+    </script>
+}

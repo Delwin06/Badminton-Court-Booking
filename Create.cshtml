@@ -1,0 +1,56 @@
+﻿@model BadmintonCourtBookingSystem.Models.TimeSlot
+
+@{
+    ViewData["Title"] = "Create Time Slot";
+}
+
+<h1>Create Time Slot</h1>
+
+<form asp-action="Create" method="post">
+
+    <div class="mb-3">
+
+        <label asp-for="StartTime"
+               class="form-label">
+        </label>
+
+        <input asp-for="StartTime"
+               type="time"
+               class="form-control" />
+
+    </div>
+
+    <div class="mb-3">
+
+        <label asp-for="EndTime"
+               class="form-label">
+        </label>
+
+        <input asp-for="EndTime"
+               type="time"
+               class="form-control" />
+
+    </div>
+
+    <div class="form-check mb-3">
+
+        <input asp-for="IsActive"
+               class="form-check-input" />
+
+        <label asp-for="IsActive"
+               class="form-check-label">
+        </label>
+
+    </div>
+
+    <button type="submit"
+            class="btn btn-success">
+        Save
+    </button>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+
+</form>

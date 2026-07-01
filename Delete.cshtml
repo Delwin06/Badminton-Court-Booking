@@ -1,0 +1,38 @@
+﻿@model BadmintonCourtBookingSystem.Models.TimeSlot
+
+<h1>Delete Time Slot</h1>
+
+<div class="alert alert-danger">
+    Are you sure you want to delete this time slot?
+</div>
+
+<table class="table">
+
+    <tr>
+        <th>Start Time</th>
+        <td>@Model.StartTime</td>
+    </tr>
+
+    <tr>
+        <th>End Time</th>
+        <td>@Model.EndTime</td>
+    </tr>
+
+</table>
+
+<form asp-action="Delete">
+
+    <input type="hidden"
+           asp-for="TimeSlotId" />
+
+    <button type="submit"
+            class="btn btn-danger">
+        Delete
+    </button>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+
+</form>

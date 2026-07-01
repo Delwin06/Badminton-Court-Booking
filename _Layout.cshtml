@@ -1,0 +1,392 @@
+﻿@using BadmintonCourtBookingSystem.Data
+@inject ApplicationDbContext _context
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BadmintonCourtBookingSystem</title>
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/custom-ui.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/BadmintonCourtBookingSystem.styles.css"
+          asp-append-version="true" />
+</head>
+
+<body>
+
+    @{
+        int notificationCount = 0;
+
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            var userIdClaim =
+                User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+
+            if (userIdClaim != null)
+            {
+                int userId = int.Parse(userIdClaim.Value);
+
+                notificationCount = _context.Notifications
+                    .Count(n => n.UserId == userId && !n.IsRead);
+            }
+        }
+    }
+
+    <header>
+
+        <nav class="navbar navbar-expand-lg custom-navbar navbar-light">
+
+            <div class="container-fluid">
+
+                <a class="navbar-brand"
+                   asp-controller="Home"
+                   asp-action="Index">
+                    🏸 CourtBook
+                </a>
+
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarContent">
+
+                    <span class="navbar-toggler-icon"></span>
+
+                </button>
+
+                <div class="collapse navbar-collapse"
+                     id="navbarContent">
+
+                    <ul class="navbar-nav me-auto">
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Home"
+                               asp-action="Index">
+                                Home
+                            </a>
+                        </li>
+
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Booking"
+                                   asp-action="MyBookings">
+                                    My Bookings
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Availability"
+                                   asp-action="Index">
+                                    Court Availability
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Notification"
+                                   asp-action="Index">
+
+                                    🔔 Notifications
+
+                                    @if (notificationCount > 0)
+                                    {
+                                        <span class="badge bg-danger">
+                                            @notificationCount
+                                        </span>
+                                    }
+
+                                </a>
+                            </li>
+                        }
+
+                        @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Dashboard"
+                                   asp-action="Index">
+                                    Dashboard
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Report"
+                                   asp-action="Index">
+                                    Reports
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Dashboard"
+                                   asp-action="Charts">
+                                    Charts
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Court"
+                                   asp-action="Index">
+                                    Courts
+                                </a>
+                            </li>
+                        }
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Home"
+                               asp-action="Privacy">
+                                Privacy
+                            </a>
+                        </li>
+
+                    </ul>
+
+                    <ul class="navbar-nav">
+
+                        @if (User.Identity!.IsAuthenticated)
+{
+    <div class="dropdown">
+
+        <a class="nav-link dropdown-toggle fw-semibold"
+           href="#"
+           role="button"
+           data-bs-toggle="dropdown">
+
+            <i class="bi bi-person-circle me-1"></i>
+            @User.Identity.Name
+
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4">
+
+            <li>
+
+                <a class="dropdown-item"
+                   asp-controller="Profile"
+                   asp-action="Index">
+
+                    <i class="bi bi-person me-2"></i>
+                    My Profile
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a class="dropdown-item"
+                   asp-controller="Booking"
+                   asp-action="MyBookings">
+
+                    <i class="bi bi-calendar-check me-2"></i>
+                    My Bookings
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a class="dropdown-item"
+                   asp-controller="Notification"
+                   asp-action="Index">
+
+                    <i class="bi bi-bell me-2"></i>
+                    Notifications
+
+                </a>
+
+            </li>
+
+            <li><hr class="dropdown-divider"></li>
+
+            <form asp-controller="Account"
+      asp-action="Logout"
+      method="post">
+
+    <button type="submit"
+            class="btn btn-link nav-link">
+        Logout
+    </button>
+
+    </form>
+
+        </ul>
+
+    </div>
+}
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Account"
+                                   asp-action="Login">
+                                    Login
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Account"
+                                   asp-action="Register">
+                                    Register
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+    </header>
+
+    <div class="container">
+
+        <main role="main" class="pb-4">
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+
+                    @TempData["Success"]
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert">
+                    </button>
+
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+
+                    @TempData["Error"]
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert">
+                    </button>
+
+                </div>
+            }
+
+            @RenderBody()
+
+        </main>
+
+    </div>
+
+    <footer class="custom-footer">
+
+        <div class="container-fluid px-4">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <h4 class="fw-bold text-primary">
+                        🏸 CourtBook
+                    </h4>
+
+                    <p>
+                        Modern badminton court booking platform
+                        built using ASP.NET Core MVC and SQL Server.
+                    </p>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <h5>Quick Links</h5>
+
+                    <ul class="list-unstyled">
+
+                        <li>
+                            <a asp-controller="Home"
+                               asp-action="Index">
+                                Home
+                            </a>
+                        </li>
+
+                        <li>
+                            <a asp-controller="Availability"
+                               asp-action="Index">
+                                Court Availability
+                            </a>
+                        </li>
+
+                        <li>
+                            <a asp-controller="Booking"
+                               asp-action="MyBookings">
+                                My Bookings
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <h5>System Information</h5>
+
+                    <p>
+                        ASP.NET Core MVC<br />
+                        Entity Framework Core<br />
+                        SQL Server
+                    </p>
+
+                </div>
+
+            </div>
+
+            <hr />
+
+            <div class="text-center">
+
+                © 2026 CourtBook.
+                All Rights Reserved.
+
+            </div>
+
+        </div>
+
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/js/site.js"
+            asp-append-version="true"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

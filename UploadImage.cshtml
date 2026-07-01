@@ -1,0 +1,23 @@
+﻿@model BadmintonCourtBookingSystem.ViewModels.CourtImageUploadViewModel
+
+<h2>Upload Court Image</h2>
+
+<form asp-action="UploadImage"
+      method="post"
+      enctype="multipart/form-data">
+
+    <input type="hidden" asp-for="CourtId" />
+
+    <div class="mb-3">
+        <label>Select Image</label>
+        <input asp-for="ImageFile"
+               type="file"
+               class="form-control" />
+    </div>
+
+    <button type="submit"
+            class="btn btn-primary">
+        Upload
+    </button>
+
+</form>
